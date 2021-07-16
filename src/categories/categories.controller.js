@@ -4,12 +4,11 @@ function list(req, res, next) {
   categoriesService
     .list()
     .then((data) => res.json({ data }))
-    .catch(next)
+    .catch(next);
 }
 
-
 module.exports = {
-  list: 
+  list,
 };
 
 // const categoriesService = require("./categories.service"); requires the service object that you created in the previous step and assigns it to categoriesService.
