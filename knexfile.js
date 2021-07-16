@@ -1,15 +1,18 @@
 // Update with your config settings.
-const path = require("path")
+const path = require("path");
 require("dotenv").config();
-const { DATABASE_URL } =process.env;
+const { DATABASE_URL } = process.env;
 
 module.exports = {
   development: {
     client: "postgresql",
     connection: DATABASE_URL,
     migrations: {
-      directory: path.join(__dirname, "src", "db", "migrations" ),
-    }
+      directory: path.join(__dirname, "src", "db", "migrations"),
+    },
+    seeds: {
+      directory: path.join(__dirname, "src", "db", "seeds"),
+    },
   },
 };
 // require("dotenv").config(); requires and loads dotenv into the application code. Dotenv loads the environment variables that you defined in .env (which currently only contains DATABASE_URL) into process.env.
