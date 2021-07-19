@@ -1,15 +1,16 @@
 const categoriesService = require("./categories.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(res, next) {
   const data = await categoriesService.list();
-  res.json({ data })
+  res.json({ data });
 }
 // The categoriesService.list() function executes a Knex query, which is an asynchronous operation. Using the await keyword before categoriesService.list() forces the execution of the code to pause on that line until that asynchronous operation is finished. Once it is, the resolved response is stored in categories. Because the list() function contains a function that uses await, you must add the async keyword in front of the list() function. Otherwise, your code won't work properly.
 
-
 module.exports = {
-  list,
+  list: asyncErrorBoundary(list),
 };
+
 // function list(req, res, next) {
 //   categoriesService
 //     .list()

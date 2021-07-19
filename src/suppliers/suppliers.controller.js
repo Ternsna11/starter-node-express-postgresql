@@ -1,4 +1,5 @@
 const supplierService = require("./suppliers.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 //require the suppliers service object at the top of suppliers.controller.js
 const hasProperties = require("../errors/hasProperties");
@@ -25,7 +26,7 @@ async function update(req, res, next) {
     supplier_id: res.locals.supplier.supplier_id,
   };
   const data = await supplierService.update(updatedSupplier);
-  res.json({ data })
+  res.json({ data });
 }
 
 async function destroy(req, res) {
@@ -64,17 +65,21 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 module.exports = {
-  create: [hasOnlyValidProperties, hasRequiredProperties, create],
-  update: [
-    supplierExists,
+  create: [
     hasOnlyValidProperties,
     hasRequiredProperties,
-    update,
+    asyncErrorBoundary(create),
   ],
-  delete: [supplierExists, destroy],
+  update: [
+    asyncErrorBoundary(supplierExists),
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    asyncErrorBoundary(update),
+  ],
+  delete: [asyncErrorBoundary(supplierExists), asyncErrorBoundary(destroy)],
 };
 
-//  - - - - - - -  .then() method of promise chaining below - - - - - - - 
+//  - - - - - - -  .then() method of promise chaining below - - - - - - -
 // function create(req, res, next) {
 //   supplierService
 //     .create(req.body.data)
@@ -131,5 +136,3 @@ module.exports = {
 // async function destroy(req, res, next) {
 //   res.sendStatus(204);
 // }
-
-
